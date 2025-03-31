@@ -68,7 +68,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
-            -Dsonar.projectKey=bobapp-back
+            -Dsonar.projectKey=antunesd_projet-ci-ci-oc-back
             -Dsonar.sources=./back/src
             -Dsonar.tests=./back/src/test
             -Dsonar.java.binaries=./back/target/classes
@@ -76,6 +76,11 @@ jobs:
             -Dsonar.projectName=bobapp-back
             -Dsonar.projectVersion=${{ github.sha }}
             -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
+            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
+            -Dsonar.projectDescription=Backend de l'application BobApp
+            -Dsonar.sourceEncoding=UTF-8
+            -Dsonar.java.source=11
+            -Dsonar.java.target=11
 
       - name: SonarQube Frontend Analysis
         uses: sonarsource/sonarqube-scan-action@master
@@ -83,13 +88,17 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
-            -Dsonar.projectKey=bobapp-front
+            -Dsonar.projectKey=antunesd_projet-ci-ci-oc-front
             -Dsonar.sources=./front/src
             -Dsonar.tests=./front/src
             -Dsonar.javascript.lcov.reportPaths=./front/coverage/lcov.info
             -Dsonar.projectName=bobapp-front
             -Dsonar.projectVersion=${{ github.sha }}
             -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
+            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
+            -Dsonar.projectDescription=Frontend de l'application BobApp
+            -Dsonar.sourceEncoding=UTF-8
+            -Dsonar.javascript.version=18
 
   docker-build-and-push:
     needs: test-and-build
