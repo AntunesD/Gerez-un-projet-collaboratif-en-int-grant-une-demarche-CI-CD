@@ -9,6 +9,7 @@ on:
 env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
 jobs:
   test-and-build:
@@ -59,6 +60,36 @@ jobs:
         with:
           name: frontend-coverage
           path: front/coverage/
+
+      # SonarQube Analysis
+      - name: SonarQube Backend Analysis
+        uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=bobapp-back
+            -Dsonar.sources=./back/src
+            -Dsonar.tests=./back/src/test
+            -Dsonar.java.binaries=./back/target/classes
+            -Dsonar.coverage.jacoco.xmlReportPaths=./back/target/site/jacoco/jacoco.xml
+            -Dsonar.projectName=bobapp-back
+            -Dsonar.projectVersion=${{ github.sha }}
+            -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
+
+      - name: SonarQube Frontend Analysis
+        uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=bobapp-front
+            -Dsonar.sources=./front/src
+            -Dsonar.tests=./front/src
+            -Dsonar.javascript.lcov.reportPaths=./front/coverage/lcov.info
+            -Dsonar.projectName=bobapp-front
+            -Dsonar.projectVersion=${{ github.sha }}
+            -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
 
   docker-build-and-push:
     needs: test-and-build
