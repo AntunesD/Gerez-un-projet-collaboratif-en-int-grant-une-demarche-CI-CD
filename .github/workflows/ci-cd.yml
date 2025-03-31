@@ -67,7 +67,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          args: >
+          args: |
             -Dsonar.projectKey=antunesd_projet-ci-ci-oc-back
             -Dsonar.sources=./back/src
             -Dsonar.tests=./back/src/test
@@ -87,7 +87,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          args: >
+          args: |
             -Dsonar.projectKey=antunesd_projet-ci-ci-oc-front
             -Dsonar.sources=./front/src
             -Dsonar.tests=./front/src
