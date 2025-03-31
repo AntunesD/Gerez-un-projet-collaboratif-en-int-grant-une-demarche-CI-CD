@@ -62,32 +62,30 @@ jobs:
           path: front/coverage/
 
       # SonarQube Analysis
+      - name: Cache SonarQube packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
       - name: SonarQube Backend Analysis
-        uses: sonarsource/sonarqube-scan-action@master
+        working-directory: ./back
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
-        with:
-          args: |
-            -Dsonar.projectKey=antunesd_projet-ci-ci-oc-back
-            -Dsonar.sources=./back/src
-            -Dsonar.tests=./back/src/test
-            -Dsonar.java.binaries=./back/target/classes
-            -Dsonar.coverage.jacoco.xmlReportPaths=./back/target/site/jacoco/jacoco.xml
-            -Dsonar.projectName=bobapp-back
-            -Dsonar.projectVersion=${{ github.sha }}
-            -Dsonar.projectDescription=Backend de l'application BobApp
-            -Dsonar.sourceEncoding=UTF-8
-            -Dsonar.java.source=11
-            -Dsonar.java.target=11
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=antunesd_projet-ci-ci-oc-back
 
       - name: SonarQube Frontend Analysis
         uses: sonarsource/sonarqube-scan-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
         with:
           args: |
             -Dsonar.projectKey=antunesd_projet-ci-ci-oc-front
@@ -99,6 +97,8 @@ jobs:
             -Dsonar.projectDescription=Frontend de l'application BobApp
             -Dsonar.sourceEncoding=UTF-8
             -Dsonar.javascript.version=18
+            -Dsonar.organization=antunesd
+            -Dsonar.host.url=https://sonarcloud.io
 
   docker-build-and-push:
     needs: test-and-build
