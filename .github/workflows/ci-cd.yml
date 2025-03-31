@@ -36,7 +36,7 @@ jobs:
           mvn verify
 
       - name: Upload Backend Coverage Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: backend-coverage
           path: back/target/site/jacoco/
@@ -55,7 +55,7 @@ jobs:
         run: npm run build
 
       - name: Upload Frontend Coverage Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: frontend-coverage
           path: front/coverage/
