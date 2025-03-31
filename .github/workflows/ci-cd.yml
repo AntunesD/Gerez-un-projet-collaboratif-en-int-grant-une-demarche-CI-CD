@@ -66,6 +66,8 @@ jobs:
         uses: sonarsource/sonarqube-scan-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
         with:
           args: |
             -Dsonar.projectKey=antunesd_projet-ci-ci-oc-back
@@ -75,8 +77,6 @@ jobs:
             -Dsonar.coverage.jacoco.xmlReportPaths=./back/target/site/jacoco/jacoco.xml
             -Dsonar.projectName=bobapp-back
             -Dsonar.projectVersion=${{ github.sha }}
-            -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
-            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
             -Dsonar.projectDescription=Backend de l'application BobApp
             -Dsonar.sourceEncoding=UTF-8
             -Dsonar.java.source=11
@@ -86,6 +86,8 @@ jobs:
         uses: sonarsource/sonarqube-scan-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
         with:
           args: |
             -Dsonar.projectKey=antunesd_projet-ci-ci-oc-front
@@ -94,8 +96,6 @@ jobs:
             -Dsonar.javascript.lcov.reportPaths=./front/coverage/lcov.info
             -Dsonar.projectName=bobapp-front
             -Dsonar.projectVersion=${{ github.sha }}
-            -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }}
-            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
             -Dsonar.projectDescription=Frontend de l'application BobApp
             -Dsonar.sourceEncoding=UTF-8
             -Dsonar.javascript.version=18
