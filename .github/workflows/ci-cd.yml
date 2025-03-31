@@ -88,7 +88,7 @@ jobs:
             -Dsonar.projectKey=antunesd_projet-ci-ci-oc-back \
             -Dsonar.organization=antunesd \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+            -Dsonar.token=${{ secrets.SONAR_TOKEN }}
 
       - name: SonarQube Frontend Analysis
         uses: SonarSource/sonarqube-scan-action@v5
