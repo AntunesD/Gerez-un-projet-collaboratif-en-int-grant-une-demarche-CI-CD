@@ -80,7 +80,13 @@ jobs:
         working-directory: ./back
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=antunesd_projet-ci-ci-oc-back
+        run: |
+          mvn clean verify
+          mvn sonar:sonar \
+            -Dsonar.projectKey=antunesd_projet-ci-ci-oc-back \
+            -Dsonar.organization=antunesd \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
       - name: SonarQube Frontend Analysis
         uses: sonarsource/sonarqube-scan-action@master
