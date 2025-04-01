@@ -26,6 +26,11 @@ jobs:
           java-version: "11"
           distribution: "adopt"
 
+      - name: Install Maven
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y maven
+
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
@@ -39,6 +44,7 @@ jobs:
           mvn verify
 
       - name: Upload Backend Coverage Report
+        if: ${{ !env.ACT }}
         uses: actions/upload-artifact@v4
         with:
           name: backend-coverage
@@ -49,15 +55,26 @@ jobs:
         working-directory: ./front
         run: npm install
 
+      - name: Install Chrome
+        run: |
+          wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+          echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list
+          apt-get update
+          apt-get install -y google-chrome-stable
+
       - name: Test Frontend
         working-directory: ./front
-        run: npm test -- --watch=false --browsers=ChromeHeadless --code-coverage
+        run: |
+          export CHROME_BIN=/usr/bin/google-chrome
+          export CHROME_OPTIONS="--no-sandbox --headless --disable-gpu"
+          npm test -- --watch=false --browsers=ChromeHeadless --code-coverage
 
       - name: Build Frontend
         working-directory: ./front
         run: npm run build
 
       - name: Upload Frontend Coverage Report
+        if: ${{ !env.ACT }}
         uses: actions/upload-artifact@v4
         with:
           name: frontend-coverage
@@ -88,7 +105,8 @@ jobs:
             -Dsonar.projectKey=antunesd_projet-ci-ci-oc-back \
             -Dsonar.organization=antunesd \
             -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+            -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
+            -Dsonar.branch.name=main
 
       - name: SonarQube Frontend Analysis
         uses: SonarSource/sonarqube-scan-action@v5
