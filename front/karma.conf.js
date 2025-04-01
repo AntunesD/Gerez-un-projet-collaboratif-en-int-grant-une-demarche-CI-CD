@@ -25,7 +25,7 @@ module.exports = function (config) {
       suppressAll: true, // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require("path").join(__dirname, "./coverage/front"),
+      dir: require("path").join(__dirname, "./coverage/bobapp"),
       subdir: ".",
       reporters: [{ type: "html" }, { type: "text-summary" }],
     },
@@ -34,19 +34,8 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ["ChromeHeadless"],
+    browsers: ["Chrome"],
     singleRun: false,
     restartOnFileChange: true,
-    customLaunchers: {
-      ChromeHeadless: {
-        base: "Chrome",
-        flags: [
-          "--no-sandbox",
-          "--headless",
-          "--disable-gpu",
-          "--remote-debugging-port=9222",
-        ],
-      },
-    },
   });
 };
